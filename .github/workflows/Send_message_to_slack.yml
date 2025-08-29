@@ -46,12 +46,12 @@ jobs:
         fi
 
         if [[ "${{ inputs.notify_user_group }}" != "" ]]; then
-          echo TITLE="<!subteam^${{ inputs.notify_user_group }}>\n:apple2: ${REPO}" >> $GITHUB_OUTPUT
+          echo TITLE="<!subteam^${{ inputs.notify_user_group }}>\n${REPO}" >> $GITHUB_OUTPUT
         elif [[ "${{ inputs.notify_user }}" != "" ]]; then
           tagged_users=$(echo "${{ inputs.notify_user }}" | tr ',' '\n' | sed 's/^[[:space:]]*//g' | sed 's/[[:space:]]*$//g' | sed 's/^/@/' | paste -sd', ' -)
-          echo TITLE="<${tagged_users}>\n:apple2: ${REPO}" >> $GITHUB_OUTPUT
+          echo TITLE="<${tagged_users}>\n${REPO}" >> $GITHUB_OUTPUT
         else
-          echo TITLE=":apple2: ${REPO}" >> $GITHUB_OUTPUT
+          echo TITLE="${REPO}" >> $GITHUB_OUTPUT
         fi
 
         echo WORKFLOW="${{ github.workflow }}" >> $GITHUB_OUTPUT
