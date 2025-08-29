@@ -26,6 +26,10 @@ on:
 
       notify_user:
         type: string
+    
+    secrets:
+      SLACK_BOT_OAUTH_TOKEN:
+        required: true
 
 jobs:
   send_message:
