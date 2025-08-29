@@ -1,20 +1,25 @@
 name: Send message to slack
 
 on:
+  workflow_dispatch:
+    inputs:
+      is_success:
+        type: string
+        required: true
+        
+      channel_id:
+        type: string
+        required: true
+        
   workflow_call:
     inputs:
       is_success:
         type: string
         required: true
-
-      framework_ref:
+        
+      channel_id:
         type: string
-
-      app_ref:
-        type: string
-
-      version:
-        type: string
+        required: true
 
       notify_user_group:
         type: string
@@ -25,9 +30,7 @@ on:
 jobs:
   send_message:
     runs-on: ubuntu-latest
-    environment: ENV
     steps:
-
     - id: messages
       run: |
         if [ -n "${{ github.event.pull_request.head.repo.full_name }}" ]; then
@@ -101,9 +104,6 @@ jobs:
         # Add sections based on inputs
         add_section "${{ steps.messages.outputs.WORKFLOW }}" "Workflow"
         add_section "${{ steps.messages.outputs.PR }}" "PR"
-        add_section "${{ inputs.framework_ref }}" "Framework ref"
-        add_section "${{ inputs.app_ref }}" "App ref"
-        add_section "${{ inputs.version }}" "Version"
         add_section "${{ steps.messages.outputs.RUN }}" "Run"
 
         # Remove any remaining placeholder
@@ -121,7 +121,7 @@ jobs:
       id: slack
       uses: slackapi/slack-github-action@v1.26.0
       with:
-        channel-id: "${{ vars.NOTIFY_SLACK_CHANNEL_ID }}"
+        channel-id: "${{ inputs.channel_id }}"
         payload: "${{ env.PAYLOAD }}"
       env:
         SLACK_BOT_TOKEN: '${{ secrets.SLACK_BOT_OAUTH_TOKEN }}'
